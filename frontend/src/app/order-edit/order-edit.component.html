@@ -1,0 +1,15 @@
+<div>
+  <h2>Order Edit</h2>
+  <div>
+    <label>Order Name:
+      <input [(ngModel)]="orderData.prod_name" placeholder="Order Name"/>
+    </label><br>
+    <label>Order Desc:
+      <input [(ngModel)]="orderData.prod_desc" placeholder="Order Description"/>
+    </label><br>
+    <label>Order Price:
+      <input [(ngModel)]="orderData.prod_price" placeholder="Order Price"/>
+    </label><br>
+  </div>
+  <button (click)="updateOrder()">Update</button>
+</div>

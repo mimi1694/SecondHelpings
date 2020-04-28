@@ -1,0 +1,17 @@
+<h2>Order List</h2>
+
+<div>
+  <button (click)="add()">
+    Add
+  </button>
+</div>
+
+<ul class="orders">
+  <li *ngFor="let p of orders; let i=index;">
+    <a routerLink="/order-details/{{p._id}}">
+      <span class="badge">{{i+1}}</span> {{p.order_name}}
+    </a>
+    <button class="delete" title="delete order"
+      (click)="delete(p._id)">x</button>
+  </li>
+</ul>
