@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { OrderComponent } from './order.component';
+import { EntryComponent } from './components/entry/entry.component';
 
 const routes: Routes = [
   {
-    path: 'orders',
-    component: OrderComponent,
-    data: { title: 'Order List' }
+    path: 'login',
+    component: EntryComponent,
+    data: { title: 'Sign In' }
   },
   { path: '',
-    redirectTo: '/orders',
+    redirectTo: '/login',
     pathMatch: 'full'
   }
 ];

@@ -6,13 +6,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { OrderComponent } from './order.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EntryComponent } from './components/entry/entry.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    OrderComponent
+    EntryComponent
   ],
   imports: [
     BrowserModule,
