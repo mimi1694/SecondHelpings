@@ -6,8 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
-
-  orders:any = [];
+  orders: any = [];
+  dishes: any = [
+    {name: "chicken", price: "10", quantity: 0},
+    {name: "steak", price: "13", quantity: 0},
+    {name: "spaghetti", price: "8", quantity: 0},
+  ];
 
   constructor() { }
 
@@ -24,6 +28,7 @@ export class OrderComponent implements OnInit {
   }
 
   add() {
+    console.warn("add");
     // this.router.navigate(['/order-add']);
   }
 
