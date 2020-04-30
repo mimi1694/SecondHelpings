@@ -10,7 +10,7 @@ import { EntryComponent } from './components/entry/entry.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { firebaseConfig } from '../environments/environment';
+import { environment } from '../environments/environment';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 
@@ -23,20 +23,16 @@ import { HomeComponent } from './components/home/home.component';
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
-    AngularFireModule,
-    AngularFirestoreModule,
-    AngularFireAuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-  constructor() {
-    AngularFireModule.initializeApp(firebaseConfig);
-  }
-}
+export class AppModule {}
 
