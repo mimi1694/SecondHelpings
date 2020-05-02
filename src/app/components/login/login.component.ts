@@ -8,6 +8,10 @@ import { AuthService } from 'src/firebase/auth.service';
 })
 export class LoginComponent {
 
-  constructor(public auth: AuthService) { }
+  constructor(private auth: AuthService) { }
+
+  googleLogin(): void {
+    this.auth.loginWithGoogle();
+  }
 
 }
