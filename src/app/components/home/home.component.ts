@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { AuthService } from 'src/firebase/auth.service';
 
 @Component({
   selector: 'home',
@@ -6,5 +7,9 @@ import { Component } from "@angular/core";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  constructor() {}
+  constructor(private auth: AuthService) {}
+
+  logout(): void {
+    this.auth.logout();
+  }
 }
