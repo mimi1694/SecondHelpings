@@ -19,17 +19,17 @@ export class RestaurantService extends FirebaseService {
   }
 
   onInit(): void {}
-
-  addRestaurant(name: string, newRest: Restaurant): Promise<void> {
-    return this.put<Restaurant>(name, newRest).catch(err => { throw err; });
-  }
-
+  
   getRestaurants(): CollectionReference {
     return this.getCollectionSnap();
   }
 
   getRestaurant(id: string): Promise<any> {
     return this.getDocInCollection(id);
+  }
+
+  addRestaurant(name: string, newRest: Restaurant): Promise<void> {
+    return this.put<Restaurant>(name, newRest).catch(err => { throw err; });
   }
 
 }

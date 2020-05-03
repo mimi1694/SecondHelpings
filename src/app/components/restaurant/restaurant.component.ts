@@ -2,7 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { Restaurant, RestaurantService } from 'src/firebase/restaurant.service';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { DishService } from 'src/firebase/dish.service';
+
+const debug = true;
 
 @Component({
   selector: 'restaurant',
@@ -16,22 +19,27 @@ export class RestaurantComponent implements OnInit {
   constructor(private restaurantService: RestaurantService, private route: ActivatedRoute, private dishService: DishService) { }
 
   ngOnInit(): void {
-    this.route.url.subscribe(url => {
+    this.route.url.pipe(take(1)).subscribe(url => {
       const id = url[1].path;
       if (id) {
-        this.restaurantService.getRestaurant(id)
-        .then(currentRestaurant => {
-          this.restaurant.next(currentRestaurant.data());
-          return currentRestaurant.data();
-        }).then(currentRestaurant => {
-          let dishes = [];
-          currentRestaurant.dishes.forEach(dishRef => {
-            dishRef.get().then(dish => dishes.push(dish.data()));
-          });
+
+        this.restaurantService.getRestaurants().onSnapshot(snapshot => {
+          const currentRestaurant = snapshot.docs.find(rest => rest.data().id === id);
+          if (currentRestaurant) {
+            this.restaurant.next(currentRestaurant.data() as Restaurant);
+            debug && console.warn("Current Restaurant", this.restaurant.getValue());
+          } else {
+            this.restaurant.next({} as Restaurant);
+          }
+        });
+        this.dishService.getDishes().where('rid', '==', id).onSnapshot(snapshot => {
+          const dishes = snapshot.docs.map(dishDoc => dishDoc.data());
           this.dishes.next(dishes);
-        }).catch(err => { throw err; });
+          debug && console.warn("Current Dishes", this.dishes.getValue());
+        });
+
       }
-    })
+    });
   }
 
 }

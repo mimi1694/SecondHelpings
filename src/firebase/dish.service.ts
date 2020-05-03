@@ -12,7 +12,7 @@ export interface Dish {
 export class DishService extends FirebaseService {
 
 	constructor(firestore: AngularFirestore) {
-    super(firestore, 'Dishes');
+    super(firestore, 'dishes');
   }
 
   onInit(): void {}
