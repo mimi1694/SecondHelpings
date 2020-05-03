@@ -1,0 +1,9 @@
+.body {
+  display: flex;
+  justify-content: center;
+}
+
+.logout-btn {
+  position: absolute;
+  bottom: 20px;
+}

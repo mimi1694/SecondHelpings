@@ -7,9 +7,5 @@ import { AuthService } from 'src/firebase/auth.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  constructor(private auth: AuthService) {}
-
-  logout(): void {
-    this.auth.logout();
-  }
+  constructor() {}
 }

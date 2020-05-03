@@ -3,13 +3,14 @@ import * as firebase from 'firebase';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { UserService, User } from './user.service';
+import { BehaviorSubject } from 'rxjs';
 
 const debug = true;
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
   private checkingForAuthUser: boolean = false;
-  loggedIn: boolean = false;
+  loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   authUser: User;
 
 	constructor(private fbAuth: AngularFireAuth, private router: Router, private userService: UserService) {
@@ -19,8 +20,8 @@ export class AuthService {
   checkForLogin(): void {
     this.fbAuth.user.subscribe(user => {
       debug && console.warn('current user: ', user);
-      this.loggedIn = !!user;
-      if (this.loggedIn) {
+      this.loggedIn.next(!!user);
+      if (!!user) {
         this.router.navigate(['/home']);
         if (!this.authUser && !this.checkingForAuthUser) this.checkForAuthUser(user.uid);
       } else {

@@ -1,1 +1,15 @@
-<router-outlet></router-outlet>
+<mat-toolbar>
+  <span>Second Helpings</span>
+
+  <mat-menu #appMenu="matMenu" yPosition="below">
+    <button mat-menu-item *ngIf="loggedIn | async" (click)="logout()">Logout</button>
+  </mat-menu>
+  
+  <button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="app">
+  <router-outlet></router-outlet>
+</div>

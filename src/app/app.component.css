@@ -1,0 +1,9 @@
+.app {
+  width: 90%;
+  margin: 0 auto;
+}
+
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+}
