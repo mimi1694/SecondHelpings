@@ -1,5 +1,10 @@
 # SecondHelpings
 
+An app to connect New Yorkers with restaurants & chefs that are currently providing a small number of takeout / pickup dishes to benefit the hurting restaurant industry during Covid-19.
+
+Users will be able to login, view participating restaurants & their pickup available times & dishes, & order.
+Restaurants will be able to login, post their dishes & availability, and receive orders from users.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.2.
 
 ## Development server
