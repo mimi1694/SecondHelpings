@@ -1,9 +1,4 @@
-.body {
-  display: flex;
-  justify-content: center;
-}
-
-.logout-btn {
-  position: absolute;
-  bottom: 20px;
+.restaurant-item {
+  margin: 12px 0;
+  max-width: 300px;
 }

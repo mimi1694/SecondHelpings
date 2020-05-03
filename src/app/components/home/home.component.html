@@ -1,1 +1,8 @@
-<h1>Home</h1>
+<h1>Available Restaurants</h1>
+
+<mat-card *ngFor="let restaurant of restaurants | async" class="restaurant-item">
+  <mat-card-header>
+    <mat-card-title>{{restaurant.name}}</mat-card-title>
+    <mat-card-content></mat-card-content>
+  </mat-card-header>
+</mat-card>
