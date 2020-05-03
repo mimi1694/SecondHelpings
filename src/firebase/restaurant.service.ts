@@ -7,7 +7,8 @@ export interface Restaurant {
   address: Object,
   dishes: Array<any>,
   end: string,
-  start: string
+  start: string,
+  id: string
 }
 
 @Injectable({ providedIn: "root" })
@@ -25,6 +26,10 @@ export class RestaurantService extends FirebaseService {
 
   getRestaurants(): CollectionReference {
     return this.getCollectionSnap();
+  }
+
+  getRestaurant(id: string): Promise<any> {
+    return this.getDocInCollection(id);
   }
 
 }

@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuardService } from 'src/firebase/auth-guard.service';
+import { LoginComponent } from './components/login/login.component';
+import { RestaurantComponent } from './components/restaurant/restaurant.component';
 
 const routes: Routes = [
   {
@@ -15,8 +16,9 @@ const routes: Routes = [
     redirectTo: '/home',
     pathMatch: 'full'
   },
+  { path: 'restaurants/:id', component: RestaurantComponent },
   { path: 'login', component: LoginComponent },
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

@@ -7,3 +7,7 @@ mat-toolbar {
   display: flex;
   justify-content: space-between;
 }
+
+.home-link {
+  color: white;
+}

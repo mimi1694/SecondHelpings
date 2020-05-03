@@ -1,0 +1,11 @@
+<div class="container">
+  <h2>{{(restaurant | async).name}}</h2>
+
+  <mat-card *ngFor="let dish of dishes | async" class="card-list-item">
+    <mat-card-header>
+      <mat-card-title>{{dish.name}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content></mat-card-content>
+  </mat-card>
+
+</div>

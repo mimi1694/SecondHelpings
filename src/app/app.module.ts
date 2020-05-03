@@ -13,12 +13,14 @@ import { environment } from '../environments/environment';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { MaterialModule } from './material.module';
+import { RestaurantComponent } from './components/restaurant/restaurant.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    RestaurantComponent
   ],
   imports: [
     BrowserModule,

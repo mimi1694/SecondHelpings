@@ -1,7 +1,8 @@
 <mat-toolbar>
-  <span>Second Helpings</span>
+  <a class="home-link" routerLink="/home">Second Helpings</a>
 
   <mat-menu #appMenu="matMenu" yPosition="below">
+    <button mat-menu-item>Cart <mat-icon>shopping_cart</mat-icon></button>
     <button mat-menu-item *ngIf="loggedIn | async" (click)="logout()">Logout</button>
   </mat-menu>
   
