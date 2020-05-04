@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FirebaseService } from './firebase.service';
-import { AngularFirestore, QuerySnapshot, CollectionReference } from '@angular/fire/firestore';
+import { AngularFirestore, QuerySnapshot, CollectionReference, DocumentData } from '@angular/fire/firestore';
 
 export interface Restaurant {
   name: string,
@@ -24,7 +24,7 @@ export class RestaurantService extends FirebaseService {
     return this.getCollectionSnap();
   }
 
-  getRestaurant(id: string): Promise<any> {
+  getRestaurant(id: string): Promise<DocumentData> {
     return this.getDocInCollection(id);
   }
 

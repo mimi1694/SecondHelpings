@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FirebaseService } from './firebase.service';
-import { AngularFirestore, AngularFirestoreDocument, CollectionReference } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { AngularFirestore, DocumentData } from '@angular/fire/firestore';
 
 export interface User {
   name: string,
@@ -25,7 +24,7 @@ export class UserService extends FirebaseService {
     return this.put<User>(id, newUser).catch(err => { throw err; });
   }
 
-  getUser(userId: string): Promise<any> {
+  getUser(userId: string): Promise<DocumentData> {
     return this.getDocInCollection(userId);
   }
 

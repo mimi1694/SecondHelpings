@@ -1,12 +1,20 @@
 <div class="container">
   <h2>{{(restaurant | async).name}}</h2>
 
-  <mat-card *ngFor="let dish of dishes | async" class="card-list-item">
-    <mat-card-header>
-      <mat-card-title>{{dish.name}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-    </mat-card-content>
-  </mat-card>
+  <div class="dish-info" *ngFor="let dish of dishes | async" >
+    <mat-accordion>
+        <mat-expansion-panel class="card-list-item">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{dish.name}}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <p>{{dish.description}}</p>
+            <h5>${{dish.price}}</h5>
+          </div>
+        </mat-expansion-panel>
+        
+      </mat-accordion>
+    <button mat-flat-button class="add-btn" color="primary" (click)="addToCart(dish)">Add to Cart</button>
+  </div>
 
 </div>

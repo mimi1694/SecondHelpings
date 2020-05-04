@@ -16,6 +16,17 @@ button {
 }
 
 .card-list-item {
+  /* margin: 12px 0; */
+  min-width: 300px;
+}
+
+.dish-info {
   margin: 12px 0;
-  max-width: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.add-btn {
+  max-height: 48px;
 }

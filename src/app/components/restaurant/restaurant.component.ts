@@ -3,7 +3,11 @@ import { Restaurant, RestaurantService } from 'src/firebase/restaurant.service';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { DishService } from 'src/firebase/dish.service';
+import { DishService, Dish } from 'src/firebase/dish.service';
+import { OrderService, Order, OrderError } from 'src/firebase/order.service';
+import { AuthService } from 'src/firebase/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OrderDialogComponent } from './order-dialog/order-dialog.component';
 
 const debug = true;
 
@@ -15,8 +19,14 @@ const debug = true;
 export class RestaurantComponent implements OnInit {
   restaurant: BehaviorSubject<Restaurant> = new BehaviorSubject({} as Restaurant);
   dishes: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
+  map;
 
-  constructor(private restaurantService: RestaurantService, private route: ActivatedRoute, private dishService: DishService) { }
+  constructor(private restaurantService: RestaurantService,
+              private route: ActivatedRoute,
+              private dishService: DishService,
+              private cartService: OrderService,
+              private authService: AuthService,
+              private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.route.url.pipe(take(1)).subscribe(url => {
@@ -42,4 +52,24 @@ export class RestaurantComponent implements OnInit {
     });
   }
 
+  addToCart(dish: Dish): void {
+    // console.warn("Adding ", dish.name, dish, this.authService.authUser.id);
+    this.cartService.addToOrder(dish)
+    .then(res => console.warn("finished adding", res))
+    .catch(err => {
+      // console.error(err);
+      // TODO check error type
+      let dialogRef = this.dialog.open(OrderDialogComponent, {
+        width: '250px',
+        data: { dish }
+      });
+  
+      dialogRef.afterClosed().subscribe((replace: boolean) => {
+        console.log('The dialog was closed', replace);
+        if (replace) {
+          this.cartService.addToOrder(dish, true);
+        }
+      });
+    });
+  }
 }

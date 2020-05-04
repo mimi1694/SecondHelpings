@@ -8,6 +8,6 @@ mat-toolbar {
   justify-content: space-between;
 }
 
-.home-link {
+a {
   color: white;
 }

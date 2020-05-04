@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore, CollectionReference } from '@angular/fire/firestore';
+import { AngularFirestore, CollectionReference, DocumentData } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: "root" })
 export class FirebaseService {
@@ -14,7 +14,7 @@ export class FirebaseService {
         return this.firestore.firestore.collection(this.collection);
     }
 
-    protected getDocInCollection(doc: string): Promise<any> {
+    protected getDocInCollection(doc: string): Promise<DocumentData> {
         return this.firestore.firestore.collection(this.collection).doc(doc).get();
     }
 
