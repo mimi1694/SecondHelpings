@@ -51,7 +51,7 @@ export class OrderService extends FirebaseService {
         currentOrder.dishes = {
           [dish.id]: { quantity: 1 }
         };
-        currentOrder.pickup = undefined;
+        currentOrder.pickup = null;
       } else {
         if (order.rid !== dish.rid) throw new OrderError("Tried to add a dish that is not from this restaurant.");
         if (currentOrder.dishes[dish.id]) { 
@@ -61,16 +61,15 @@ export class OrderService extends FirebaseService {
         }
       }
 
+      // look at all the dishes and tally price instead of trusting current total + new dish price
       Object.keys(currentOrder.dishes).forEach(dishId => {
         this.dishService.getDish(dishId).then(dish => {
-          // console.warn("dish", dish.data());
           total += (currentOrder.dishes[dishId].quantity * dish.data().price);
         });
       });
       currentOrder.total = total;
-      // console.warn(currentOrder);
+
       return this.put<Order>(this.authService.authUser.id, currentOrder);
     });
   }
-
 }
