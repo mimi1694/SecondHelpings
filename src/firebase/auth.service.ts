@@ -11,7 +11,7 @@ const debug = true;
 export class AuthService {
   private checkingForAuthUser: boolean = false;
   loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  authUser: User;
+  authUser: BehaviorSubject<User> = new BehaviorSubject<User>({} as User);
 
 	constructor(private fbAuth: AngularFireAuth, private router: Router, private userService: UserService) {
     this.checkForLogin();
@@ -23,10 +23,10 @@ export class AuthService {
       this.loggedIn.next(!!user);
       if (!!user) {
         this.router.navigate(['/home']);
-        if (!this.authUser && !this.checkingForAuthUser) this.checkForAuthUser(user.uid);
+        if (!this.authUser.getValue().id && !this.checkingForAuthUser) this.checkForAuthUser(user.uid);
       } else {
         this.router.navigate(['login']);
-        this.authUser = undefined;
+        this.authUser.next({} as User);
       }
     });
   }
@@ -69,7 +69,7 @@ export class AuthService {
   private checkForAuthUser(id: string): void {
     this.checkingForAuthUser = true;
     this.userService.getUser(id).then(user => {
-      this.authUser = user.data();
+      this.authUser.next(user.data());
       console.warn("auth user: ", this.authUser);
       this.checkingForAuthUser = false;
     }).catch(err => {

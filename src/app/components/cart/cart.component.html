@@ -1,2 +1,15 @@
 <h1>Your order</h1>
 
+<div *ngIf="(dishes | async).length">
+  <div *ngFor="let dishData of dishes | async">
+    <div class="dish-content">
+      <h3> {{dishData.dish.name}} -- ${{dishData.dish.price}} x {{dishData.quantity}}</h3>
+      <p>
+        <span> {{dishData.dish.description}} </span>
+      </p>
+    </div>
+  </div>
+</div>
+<h3 *ngIf="(dishes | async).length === 0">No items in your order.</h3>
+
+<h3>Total: {{(order | async).total}}</h3>

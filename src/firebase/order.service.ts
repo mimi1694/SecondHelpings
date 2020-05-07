@@ -37,14 +37,19 @@ export class OrderService extends FirebaseService {
   onInit(): void {}
 
   getActiveOrder(uid: string): Promise<Order> {
-    return this.getCollectionSnap().where('uid', '==', uid).where('active', '==', true).get()
-      .then(order => order.docs[0].data() as Order);
+    return this.getActiveOrderSnap(uid).get().then(order => order.docs[0].data() as Order);
+  }
+
+  getActiveOrderSnap(uid: string) {
+    return this.getCollectionSnap().where('uid', '==', uid).where('active', '==', true);
   }
 
   addToOrder(dish: Dish, replaceOrder?: boolean): Promise<any> {
-    return this.getActiveOrder(this.authService.authUser.id).then(order => {
-      const currentOrder = order;
-      let total = 0;
+    let currentOrder, total;
+    return this.getActiveOrder(this.authService.authUser.getValue().id)
+    .then(order => {
+      currentOrder = order;
+      total = 0;
 
       if (replaceOrder) {
         currentOrder.rid = dish.rid;
@@ -62,14 +67,14 @@ export class OrderService extends FirebaseService {
       }
 
       // look at all the dishes and tally price instead of trusting current total + new dish price
-      Object.keys(currentOrder.dishes).forEach(dishId => {
-        this.dishService.getDish(dishId).then(dish => {
+      return Promise.all(
+        Object.keys(currentOrder.dishes).map(dishId => this.dishService.getDish(dishId).then(dish => {
           total += (currentOrder.dishes[dishId].quantity * dish.data().price);
-        });
-      });
+        })
+      ))
+    }).then(() => {
       currentOrder.total = total;
-
-      return this.put<Order>(this.authService.authUser.id, currentOrder);
+      return this.put<Order>(this.authService.authUser.getValue().id, currentOrder);
     });
   }
 }

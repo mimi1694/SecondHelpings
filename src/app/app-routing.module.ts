@@ -18,7 +18,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   { path: 'restaurants/:id', component: RestaurantComponent },
-  { path: 'cart', component: CartComponent },
+  { path: 'cart/:userId', component: CartComponent },
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: 'home' }
 ];
