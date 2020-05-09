@@ -16,7 +16,8 @@ export interface Order {
   rid: string,
   uid: string,
   total: number,
-  id: string
+  id?: string,
+  active: boolean
 }
 
 export class OrderError extends Error {
@@ -29,15 +30,17 @@ export class OrderError extends Error {
 
 @Injectable({ providedIn: "root" })
 export class OrderService extends FirebaseService {
+  id: string = "";
 
 	constructor(firestore: AngularFirestore, private authService: AuthService, private dishService: DishService) {
     super(firestore, 'orders');
+    this.authService.authUser.subscribe(authUser => this.id = authUser.id);
   }
 
   onInit(): void {}
 
-  getActiveOrder(uid: string): Promise<Order> {
-    return this.getActiveOrderSnap(uid).get().then(order => order.docs[0].data() as Order);
+  getActiveOrder(uid: string): Promise<Order | undefined> {
+    return this.getActiveOrderSnap(uid).get().then(order => order.docs[0] ? order.docs[0].data() as Order : undefined);
   }
 
   getActiveOrderSnap(uid: string) {
@@ -46,10 +49,21 @@ export class OrderService extends FirebaseService {
 
   addToOrder(dish: Dish, replaceOrder?: boolean): Promise<any> {
     let currentOrder, total;
-    return this.getActiveOrder(this.authService.authUser.getValue().id)
+    return this.getActiveOrder(this.id)
     .then(order => {
-      currentOrder = order;
       total = 0;
+      if (order) {
+        currentOrder = order;
+      } else {
+        currentOrder = {
+          dishes: {},
+          pickup: null,
+          rid: dish.rid,
+          uid: this.id,
+          total,
+          active: true
+        };
+      }
 
       if (replaceOrder) {
         currentOrder.rid = dish.rid;
@@ -58,7 +72,8 @@ export class OrderService extends FirebaseService {
         };
         currentOrder.pickup = null;
       } else {
-        if (order.rid !== dish.rid) throw new OrderError("Tried to add a dish that is not from this restaurant.");
+        if (!currentOrder.rid.length) currentOrder.rid = dish.rid;
+        else if (currentOrder.rid.length && currentOrder.rid !== dish.rid) throw new OrderError("Tried to add a dish that is not from this restaurant.");
         if (currentOrder.dishes[dish.id]) { 
           currentOrder.dishes[dish.id].quantity++;
         } else {
@@ -74,7 +89,22 @@ export class OrderService extends FirebaseService {
       ))
     }).then(() => {
       currentOrder.total = total;
-      return this.put<Order>(this.authService.authUser.getValue().id, currentOrder);
+      return currentOrder.id ? this.edit<Order>(currentOrder.id, currentOrder) : this.put<Order>(currentOrder).then(() => {});
     });
+  }
+
+  processCart(): any {
+    return this.getActiveOrder(this.id).then(order => {
+      const currentOrder = order;
+      order.active = false;
+      return this.edit<Order>(order.id, currentOrder);
+    }).then(() => this.put<Order>({
+      dishes: {},
+      pickup: 0,
+      rid: "",
+      uid: this.id,
+      total: 0,
+      active: true,
+    }));
   }
 }

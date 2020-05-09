@@ -29,7 +29,7 @@ export class RestaurantService extends FirebaseService {
   }
 
   addRestaurant(name: string, newRest: Restaurant): Promise<void> {
-    return this.put<Restaurant>(name, newRest).catch(err => { throw err; });
+    return this.edit<Restaurant>(name, newRest).catch(err => { throw err; });
   }
 
 }

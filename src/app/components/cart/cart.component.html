@@ -12,4 +12,5 @@
 </div>
 <h3 *ngIf="(dishes | async).length === 0">No items in your order.</h3>
 
-<h3>Total: {{(order | async).total}}</h3>
+<h3>Total: ${{(order | async).total}}</h3>
+<button mat-raised-button (click)="pay()">Pay Now</button>
