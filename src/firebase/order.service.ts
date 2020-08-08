@@ -5,9 +5,7 @@ import { Dish, DishService } from './dish.service';
 import { AuthService } from './auth.service';
 
 export type DishCount = {
-  [K in string] : {
-    quantity: number 
-  }
+  [K in string] : number 
 };
 
 export interface Order {
@@ -68,23 +66,23 @@ export class OrderService extends FirebaseService {
       if (replaceOrder) {
         currentOrder.rid = dish.rid;
         currentOrder.dishes = {
-          [dish.id]: { quantity: 1 }
+          [dish.id]: 1
         };
         currentOrder.pickup = null;
       } else {
         if (!currentOrder.rid.length) currentOrder.rid = dish.rid;
         else if (currentOrder.rid.length && currentOrder.rid !== dish.rid) throw new OrderError("Tried to add a dish that is not from this restaurant.");
         if (currentOrder.dishes[dish.id]) { 
-          currentOrder.dishes[dish.id].quantity++;
+          currentOrder.dishes[dish.id]++;
         } else {
-          currentOrder.dishes[dish.id] = { quantity: 1 };
+          currentOrder.dishes[dish.id] = 1;
         }
       }
 
       // look at all the dishes and tally price instead of trusting current total + new dish price
       return Promise.all(
         Object.keys(currentOrder.dishes).map(dishId => this.dishService.getDish(dishId).then(dish => {
-          total += (currentOrder.dishes[dishId].quantity * dish.data().price);
+          total += (currentOrder.dishes[dishId] * dish.data().price);
         })
       ))
     }).then(() => {
@@ -93,7 +91,18 @@ export class OrderService extends FirebaseService {
     });
   }
 
-  processCart(): any {
+  updateOrder(oldOrder: Order, updates: Partial<Order>): Promise<void> {
+    const newOrder = Object.assign({}, oldOrder);
+    Object.keys(updates).forEach(key => {
+      newOrder[key] = updates[key]
+    });
+    return this.getActiveOrder(this.id).then(order => {
+      order.active = false;
+      return this.edit<Order>(order.id, newOrder);
+    })
+  }
+
+  processCart(): Promise<any> {
     return this.getActiveOrder(this.id).then(order => {
       const currentOrder = order;
       order.active = false;

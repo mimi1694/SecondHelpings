@@ -1,3 +1,8 @@
+.order {
+  display: flex;
+  flex-direction: column;
+}
+
 .mat-list {
   min-height: 200px;
 }
@@ -6,10 +11,41 @@
   height: unset!;
 }
 
+.order-total {
+  margin-left: auto;
+}
+
 .dish-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.dish-content__quantity {
+  display: flex;
+}
+
+.dish-content__form {
+  margin-top: auto;
+  max-width: 80px;
+}
+
+.pickup-picker {
   display: flex;
   flex-direction: column;
 }
+
+.pickup-picker__forms {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* .pickup-picker__forms .mat-form-field {
+  height: ;
+} */
+
 p {
   display: inline;
+  padding-left: 12px;
 }

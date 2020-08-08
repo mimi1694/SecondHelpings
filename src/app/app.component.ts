@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
           if (!userActiveOrder.empty) {
             const orderData = userActiveOrder.docs[0].data();
             Object.keys(orderData.dishes).forEach(dishName => {
-              this.numOrderItems += orderData.dishes[dishName].quantity;
+              this.numOrderItems += orderData.dishes[dishName];
             });
           }
         });

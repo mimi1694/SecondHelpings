@@ -7,10 +7,12 @@ import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { PaidComponent } from './paid/paid.component';
 import { RestaurantService } from 'src/firebase/restaurant.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 type DishData = {
   dish: Dish,
-  quantity: number
+  quantity: FormControl,
+  total: number
 }
 
 @Component({
@@ -19,9 +21,18 @@ type DishData = {
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
-  dishes: BehaviorSubject<DishData[]> = new BehaviorSubject<DishData[]>([]);
-  order: BehaviorSubject<Order> = new BehaviorSubject<Order>({} as Order);
-  availableTimes: (d: Date | null) => boolean;
+  availableDays: (d: Date | null) => boolean;
+  availableTimeSlots: Array<string> = ["2:00", "2:15"];
+  currentOrder: BehaviorSubject<Order> = new BehaviorSubject<Order>({} as Order);
+  showForm: boolean = false;
+  quantityOptions = [0, 1, 2, 3, 4 ,5, 6, 7, 8, 9, 10];
+
+  dishQuantities: Array<{ [key: string]: FormControl }>
+
+  orderPickupInfo: FormGroup = new FormGroup({
+    day: new FormControl(),
+    time: new FormControl()
+  });
 
   constructor(private dishService: DishService,
               private orderService: OrderService,
@@ -30,27 +41,9 @@ export class CartComponent implements OnInit {
               private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.orderPickupInfo.valueChanges.subscribe(console.warn);
     this.initCalendar();
-    this.activatedRoute.params.pipe(take(1)).subscribe(params => {
-      this.orderService.getActiveOrderSnap(params.userId).onSnapshot(snap => {
-        const activeOrder = snap.docs[0] ? snap.docs[0].data() as Order : {
-          dishes: {},
-          pickup: null,
-          rid: null,
-          uid: null,
-          total: 0,
-          active: true,
-        } as Order;
-        console.warn(activeOrder);
-        this.order.next(activeOrder);
-        const newDishes = [];
-        Promise.all(Object.keys(activeOrder.dishes).map(dishId => {
-          return this.dishService.getDish(dishId).then(dishData => {
-            newDishes.push({ dish: dishData.data(), quantity: activeOrder.dishes[dishId].quantity });
-          });
-        })).then(() => this.dishes.next(newDishes));
-      })
-    });
+    this.initForm();
   }
 
   pay(): void {
@@ -61,31 +54,58 @@ export class CartComponent implements OnInit {
     }).catch(console.error);
   }
 
+  private initForm(): void {
+    this.activatedRoute.params.pipe(take(1)).subscribe(params => {
+      this.orderService.getActiveOrderSnap(params.userId).onSnapshot(snap => {
+        const activeOrder = snap.docs[0] ? snap.docs[0].data() as Order : {
+          dishes: {},
+          pickup: null,
+          rid: null,
+          uid: null,
+          total: 0,
+          active: true,
+        } as Order;
+        this.currentOrder.next(activeOrder);
+
+        const newDishes = [];
+        Promise.all(Object.keys(activeOrder.dishes).map(dishId => {
+          return this.dishService.getDish(dishId).then(dishData => {
+            newDishes.push({
+              dish: dishData.data(),
+              quantity: new FormControl(activeOrder.dishes[dishId]),
+              total: (dishData.data().price * activeOrder.dishes[dishId])
+            });
+          });
+        })).then(() => {
+          this.showForm = !!newDishes.length;
+          this.dishQuantities = newDishes;
+        });
+      })
+    });
+  }
+
   private initCalendar(): void {
-    this.order.subscribe(currentOrder => {
+    this.currentOrder.subscribe(currentOrder => {
       if (currentOrder.rid) {
         this.restaurantService.getRestaurant(currentOrder.rid).then(restaurant => {
-          this.availableTimes = (d: Date | null): boolean => {
-            const todayNum = (d || new Date()).getDay();
-            const todayWord = this.dayWordFromNum(todayNum);
-            return restaurant.data()[todayWord];
+
+          // filter calendar
+          this.availableDays = (d: Date | null): boolean => {
+            const today = new Date();
+            const chosenDay = (d || new Date()).getDay();
+            const dayString = this.dayWordFromNum(chosenDay);
+            return restaurant.data()[dayString] && d > today;
           };
+
+          // update available time slots:
+
         });
       }
     });
   }
 
-  private dayNumFromWord(day: string): number {
-    switch(day) {
-      case "sun": return 0;
-      case "mon": return 1;
-      case "tues": return 2;
-      case "wed": return 3;
-      case "thurs": return 4;
-      case "fri": return 5;
-      case "sat": return 6;
-      default: return -1;
-    }
+  private populateAvailableTimes(start: string, end: string): Array<string> {
+    return [];
   }
 
   private dayWordFromNum(day: number): string {

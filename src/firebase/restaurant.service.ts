@@ -16,6 +16,8 @@ export interface Restaurant {
   fri?: boolean,
   sat?: boolean,
   sun?: boolean,
+  slotsIncrement: number;
+  ordersPerSlot: number;
 }
 
 @Injectable({ providedIn: "root" })
