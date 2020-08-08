@@ -1,14 +1,22 @@
 <mat-toolbar>
   <a class="home-link" routerLink="/home">Second Helpings</a>
 
-  <mat-menu #appMenu="matMenu" yPosition="below">
-    <button mat-menu-item (click)="navToCart()">Cart <mat-icon>shopping_cart</mat-icon></button>
-    <button mat-menu-item *ngIf="loggedIn | async" (click)="logout()">Logout</button>
-  </mat-menu>
+  <div class="menu-controls">
+    <button class="menu-btn" mat-menu-item (click)="navToCart()">
+      <span>Cart</span>
+      <mat-icon class="menu-icon" [matBadge]="numOrderItems" matBadgeColor="warn" [matBadgeHidden]="numOrderItems === 0">
+        shopping_cart
+      </mat-icon>
+    </button>
   
-  <button mat-icon-button [matMenuTriggerFor]="appMenu">
-    <mat-icon>more_vert</mat-icon>
-  </button>
+    <mat-menu #appMenu="matMenu" yPosition="below">
+      <button mat-menu-item *ngIf="loggedIn | async" (click)="logout()">Logout</button>
+    </mat-menu>
+    
+    <button mat-icon-button [matMenuTriggerFor]="appMenu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+  </div>
 </mat-toolbar>
 
 <div class="app">

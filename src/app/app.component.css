@@ -15,3 +15,19 @@ a {
 .mat-list-item {
   height: unset!;
 }
+
+.menu-controls {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.menu-btn {
+  width: auto;
+  display: flex;
+}
+
+.menu-icon {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 8px;
+}

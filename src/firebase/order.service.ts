@@ -4,7 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Dish, DishService } from './dish.service';
 import { AuthService } from './auth.service';
 
-type DishCount = {
+export type DishCount = {
   [K in string] : {
     quantity: number 
   }
