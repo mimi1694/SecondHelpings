@@ -8,7 +8,14 @@ export interface Restaurant {
   dishes: Array<any>,
   end: string,
   start: string,
-  id: string
+  id: string,
+  mon?: boolean,
+  tues?: boolean,
+  wed?: boolean,
+  thurs?: boolean,
+  fri?: boolean,
+  sat?: boolean,
+  sun?: boolean,
 }
 
 @Injectable({ providedIn: "root" })

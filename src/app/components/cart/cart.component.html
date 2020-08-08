@@ -9,16 +9,17 @@
       </p>
     </div>
   </div>
+  <mat-form-field class="example-full-width" appearance="fill" color="dark">
+    <mat-label panelClass="datePickerLabel" color="dark">Choose your pickup time</mat-label>
+    <input matInput [matDatepickerFilter]="availableTimes" [matDatepicker]="picker" color="dark" appearance="fill">
+    <mat-datepicker-toggle matSuffix [for]="picker" color="dark"></mat-datepicker-toggle>
+    <mat-datepicker color="dark" #picker></mat-datepicker>
+  </mat-form-field>
 </div>
+
 <h3 *ngIf="(dishes | async).length === 0">No items in your order.</h3>
 
 
-<mat-form-field class="example-full-width" appearance="fill" color="dark">
-  <mat-label panelClass="datePickerLabel" color="dark">Choose your pickup time</mat-label>
-  <input matInput [matDatepickerFilter]="availableTimes" [matDatepicker]="picker" color="dark" appearance="fill">
-  <mat-datepicker-toggle matSuffix [for]="picker" color="dark"></mat-datepicker-toggle>
-  <mat-datepicker color="dark" #picker></mat-datepicker>
-</mat-form-field>
 
 <h5>Total: ${{(order | async).total}}</h5>
 
