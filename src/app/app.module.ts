@@ -30,9 +30,9 @@ import { CartComponent } from './components/cart/cart.component';
     AngularFirestoreModule,
     AngularFireAuthModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    BrowserAnimationsModule,
     MaterialModule
   ],
   providers: [],

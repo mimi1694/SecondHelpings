@@ -20,6 +20,11 @@ type DishData = {
 export class CartComponent implements OnInit {
   dishes: BehaviorSubject<DishData[]> = new BehaviorSubject<DishData[]>([]);
   order: BehaviorSubject<Order> = new BehaviorSubject<Order>({} as Order);
+  availableTimes: (d: Date | null) => boolean = (d: Date | null): boolean => {
+    const day = (d || new Date()).getDay();
+    // Prevent Saturday and Sunday from being selected.
+    return day !== 0 && day !== 6;
+  }
 
   constructor(private dishService: DishService,
               private orderService: OrderService,

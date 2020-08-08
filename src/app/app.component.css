@@ -24,10 +24,12 @@ a {
 .menu-btn {
   width: auto;
   display: flex;
+  color: white;
 }
 
 .menu-icon {
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 8px;
+  color: white;
 }
