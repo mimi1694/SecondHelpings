@@ -6,7 +6,7 @@
     <div class="dish-content">
       <h5> {{dishData.dish.name}}</h5>
       <div class="dish-content__quantity">
-        <mat-form-field class="dish-content__form">
+        <mat-form-field class="dish-content__form" appearance="outline">
           <mat-select [formControl]="dishData.quantity">
             <mat-option *ngFor="let option of quantityOptions" [value]="option">{{ option }}</mat-option>
           </mat-select>
@@ -20,7 +20,7 @@
   <form class="pickup-picker" [formGroup]="orderPickupInfo" (onSubmit)="pay()">
 
     <div class="pickup-picker__forms">
-      <mat-form-field class="example-full-width" appearance="fill" color="dark">
+      <mat-form-field class="example-full-width" appearance="outline" color="dark">
         <mat-label panelClass="datePickerLabel" color="dark">Choose your pickup day</mat-label>
         <input matInput
           autocomplete="false"
@@ -33,7 +33,7 @@
         <mat-datepicker color="dark" #picker></mat-datepicker>
       </mat-form-field>
     
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="outline" class="pickup-picker__timeslot">
         <mat-label>Choose your pickup time</mat-label>
         <mat-select formControlName="time">
           <mat-option *ngFor="let timeSlot of availableTimeSlots" [value]="timeSlot">{{ timeSlot }}</mat-option>

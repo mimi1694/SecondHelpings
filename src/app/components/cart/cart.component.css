@@ -12,13 +12,19 @@
 }
 
 .order-total {
-  margin-left: auto;
+  margin: 20px 0 20px auto;
+  font-style: bold;
 }
 
 .dish-content {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  height: 64px;
+}
+
+.dish-content h5 {
+  margin: auto 0;
 }
 
 .dish-content__quantity {
@@ -33,19 +39,19 @@
 .pickup-picker {
   display: flex;
   flex-direction: column;
+  max-width: 180px;
+  margin-left: auto;
 }
 
 .pickup-picker__forms {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  max-width: 180px;
+  margin: 0 0 0 auto;;
 }
-
-/* .pickup-picker__forms .mat-form-field {
-  height: ;
-} */
 
 p {
   display: inline;
   padding-left: 12px;
+  margin: auto 0;
 }
