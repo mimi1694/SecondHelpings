@@ -26,12 +26,13 @@ export class AppComponent implements OnInit {
       // populate cart badge
       if (authUser.id) {
         this.order.getActiveOrderSnap(authUser.id).onSnapshot(userActiveOrder => {
+          this.numOrderItems = 0;
           if (!userActiveOrder.empty) {
             const orderData = userActiveOrder.docs[0].data();
             Object.keys(orderData.dishes).forEach(dishName => {
               this.numOrderItems += orderData.dishes[dishName].quantity;
             });
-          } else this.numOrderItems = 0;
+          }
         });
       } else this.numOrderItems = 0; // logout
     });
