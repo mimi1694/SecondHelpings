@@ -2,7 +2,8 @@
   "name": "second-helpings",
   "version": "0.0.1",
   "engines": {
-    "node": "10.x"
+    "node": "10.15.3",
+    "npm": "6.13.4"
   },
   "scripts": {
     "ng": "ng",
@@ -10,7 +11,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "start:prod": "node server.js"
   },
   "private": true,
   "dependencies": {
@@ -34,16 +36,17 @@
     "mongoose": "^5.9.10",
     "rxjs": "~6.5.5",
     "tslib": "^1.9.0",
+    "typescript": "~3.8.3",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.4",
+    "@angular-devkit/build-angular": "^0.1000.5",
     "@angular/cli": "~9.1.4",
     "@angular/compiler-cli": "~9.1.4",
     "@angular/language-service": "~9.1.4",
-    "@types/node": "~13.13.4",
     "@types/jasmine": "~3.5.10",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~13.13.4",
     "codelyzer": "~5.2.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.2",
