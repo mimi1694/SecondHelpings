@@ -35,7 +35,7 @@ export class CartComponent implements OnInit {
   showForm: boolean = false;
 
   availableDays: (d: Date | null) => boolean;
-  availableTimeSlots: Array<string> = ["2:00", "2:15"];
+  availableTimeSlots: Array<string> = [];
 
   currentOrder: BehaviorSubject<FullOrderInfo> = new BehaviorSubject<FullOrderInfo>({} as FullOrderInfo);
 
@@ -122,18 +122,38 @@ export class CartComponent implements OnInit {
             const today = new Date();
             const chosenDay = (d || new Date()).getDay();
             const dayString = this.dayWordFromNum(chosenDay);
-            return restaurant.data()[dayString] && d > today;
+            return restaurant[dayString] && d > today;
           };
 
           // update available time slots:
-          this.availableTimeSlots = this.populateAvailableTimes(restaurant.data());
+          this.availableTimeSlots = this.populateAvailableTimes(restaurant);
         });
       }
     });
   }
 
   private populateAvailableTimes(restaurant: Restaurant): Array<string> {
-    return ["2:00", "2:15"];
+    let currentTimeSlot = new Date();
+    currentTimeSlot.setHours(parseInt(restaurant.start.split(":")[0]));
+    currentTimeSlot.setMinutes(parseInt(restaurant.start.split(":")[1]));
+    const endTime = new Date();
+    endTime.setHours(parseInt(restaurant.end.split(":")[0]));
+    endTime.setMinutes(parseInt(restaurant.end.split(":")[1]));
+    const times: Date[] = [currentTimeSlot];
+    
+    while (times[times.length - 1] < endTime) {
+      const newTime = new Date(currentTimeSlot);
+      newTime.setTime(currentTimeSlot.getTime() + (60000 * restaurant.slotsIncrement));
+      times.push(newTime);
+      currentTimeSlot = newTime;
+    }
+
+    return times.map(time => {
+      const hours = time.getHours() % 12 ? time.getHours() % 12 : 12;
+      const min = (!time.getMinutes() ? "00" : time.getMinutes());
+      const suffix = time.getHours() < 12 ? "AM" : "PM";
+      return hours + ":" + min + " " + suffix;
+    });
   }
 
   private dayWordFromNum(day: number): string {

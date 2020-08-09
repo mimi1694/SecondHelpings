@@ -33,8 +33,8 @@ export class RestaurantService extends FirebaseService {
     return this.getCollectionSnap();
   }
 
-  getRestaurant(id: string): Promise<DocumentData> {
-    return this.getDocInCollection(id);
+  getRestaurant(id: string): Promise<Restaurant> {
+    return this.getDocInCollection(id).then(res => res.data());
   }
 
   addRestaurant(newRest: Restaurant, name?: string): Promise<void> {

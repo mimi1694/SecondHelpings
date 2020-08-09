@@ -8,8 +8,8 @@ export const Restaurants = {
       "longitude": -73.962311
     },
     "dishes": ["/dishes/prune-meatballs"],
-    "start": "14:00",
-    "end": "17:00",
+    "start": "10:00",
+    "end": "19:00",
     "id": "prune",
     "mon": true,
     "tues": true,
@@ -27,7 +27,7 @@ export const Restaurants = {
       "longitude": 74.01
     },
     "dishes": ["dishes/locanda-chicken", "dishes/locanda-steak", "dishes/locanda-spaghetti"],
-    "start": "10:00",
+    "start": "14:00",
     "end": "17:00",
     "id": "locanda-verde",
     "mon": false,
