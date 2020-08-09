@@ -2,12 +2,12 @@
 
 <div *ngIf="showForm" class="order">
 
-  <div *ngFor="let dishData of dishQuantities">
+  <div *ngFor="let dishData of (currentOrder | async).dishes; let i = index" [attr.data-index]="i">
     <div class="dish-content">
       <h5> {{dishData.dish.name}}</h5>
       <div class="dish-content__quantity">
         <mat-form-field class="dish-content__form" appearance="outline">
-          <mat-select [formControl]="dishData.quantity">
+          <mat-select [formControl]="orderDishInfo.controls[i]">
             <mat-option *ngFor="let option of quantityOptions" [value]="option">{{ option }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -17,7 +17,7 @@
   </div>
   <p class="order-total">Total: ${{(currentOrder | async).total}}</p>
 
-  <form class="pickup-picker" [formGroup]="orderPickupInfo" (onSubmit)="pay()">
+  <form class="pickup-picker" [formGroup]="orderPickupInfo">
 
     <div class="pickup-picker__forms">
       <mat-form-field class="example-full-width" appearance="outline" color="dark">
@@ -41,7 +41,7 @@
       </mat-form-field>
     </div>
 
-    <button mat-raised-button type="submit">Pay Now</button>
+    <button mat-raised-button type="submit" (click)="pay()">Pay Now</button>
   </form>
 </div>
 

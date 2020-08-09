@@ -1,19 +1,29 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnChanges, SimpleChanges } from "@angular/core";
 import { Order, OrderService } from 'src/firebase/order.service';
 import { Dish, DishService } from 'src/firebase/dish.service';
 import { ActivatedRoute } from '@angular/router';
-import { take } from 'rxjs/operators';
+import { take, distinctUntilKeyChanged } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { PaidComponent } from './paid/paid.component';
-import { RestaurantService } from 'src/firebase/restaurant.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { RestaurantService, Restaurant } from 'src/firebase/restaurant.service';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 
 type DishData = {
   dish: Dish,
-  quantity: FormControl,
+  quantity: number,
   total: number
 }
+
+type FullOrderInfo = {
+  dishes: DishData[],
+  pickup: number,
+  rid: string,
+  uid: string,
+  total: number,
+  id?: string,
+  active: boolean
+};
 
 @Component({
   selector: 'cart',
@@ -21,14 +31,16 @@ type DishData = {
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
+  quantityOptions = [0, 1, 2, 3, 4 ,5, 6, 7, 8, 9, 10];
+  showForm: boolean = false;
+
   availableDays: (d: Date | null) => boolean;
   availableTimeSlots: Array<string> = ["2:00", "2:15"];
-  currentOrder: BehaviorSubject<Order> = new BehaviorSubject<Order>({} as Order);
-  showForm: boolean = false;
-  quantityOptions = [0, 1, 2, 3, 4 ,5, 6, 7, 8, 9, 10];
 
-  dishQuantities: Array<{ [key: string]: FormControl }>
+  currentOrder: BehaviorSubject<FullOrderInfo> = new BehaviorSubject<FullOrderInfo>({} as FullOrderInfo);
 
+  // forms for the order info
+  orderDishInfo: FormArray = new FormArray([]);
   orderPickupInfo: FormGroup = new FormGroup({
     day: new FormControl(),
     time: new FormControl()
@@ -41,20 +53,22 @@ export class CartComponent implements OnInit {
               private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.orderPickupInfo.valueChanges.subscribe(console.warn);
     this.initCalendar();
     this.initForm();
   }
 
   pay(): void {
+    this.orderDishInfo.reset();
+    this.orderPickupInfo.reset();
     this.orderService.processCart().then(res => {
       this.dialog.open(PaidComponent, {
-        width: '250px'
+        width: '350px'
       });
     }).catch(console.error);
   }
 
   private initForm(): void {
+    // populate the forms and current order data
     this.activatedRoute.params.pipe(take(1)).subscribe(params => {
       this.orderService.getActiveOrderSnap(params.userId).onSnapshot(snap => {
         const activeOrder = snap.docs[0] ? snap.docs[0].data() as Order : {
@@ -64,28 +78,42 @@ export class CartComponent implements OnInit {
           uid: null,
           total: 0,
           active: true,
-        } as Order;
-        this.currentOrder.next(activeOrder);
+        } as FullOrderInfo;
+        const activeOrderDishes: DishData[] = [];
 
-        const newDishes = [];
         Promise.all(Object.keys(activeOrder.dishes).map(dishId => {
           return this.dishService.getDish(dishId).then(dishData => {
-            newDishes.push({
-              dish: dishData.data(),
-              quantity: new FormControl(activeOrder.dishes[dishId]),
-              total: (dishData.data().price * activeOrder.dishes[dishId])
+            activeOrderDishes.push({
+              dish: dishData,
+              quantity: activeOrder.dishes[dishId],
+              total: (dishData.price * activeOrder.dishes[dishId])
             });
+            this.orderDishInfo.push(new FormControl(activeOrder.dishes[dishId], { updateOn: "change" }));
           });
         })).then(() => {
-          this.showForm = !!newDishes.length;
-          this.dishQuantities = newDishes;
+          this.showForm = !!activeOrderDishes.length;
+          activeOrder.dishes = activeOrderDishes;
+          this.currentOrder.next(activeOrder as FullOrderInfo);
         });
       })
+    });
+
+    // every time the dish quantities update, update the current order
+    this.orderDishInfo.valueChanges.subscribe(dishQuantities => {
+      const updatedOrderInfo = this.currentOrder.getValue();
+      if (updatedOrderInfo.dishes && updatedOrderInfo.dishes.length) {
+        dishQuantities.forEach((num, i) => {
+          updatedOrderInfo.dishes[i].quantity = num;
+          updatedOrderInfo.dishes[i].total = num * (updatedOrderInfo.dishes[i].dish.price);
+        });
+        updatedOrderInfo.total = updatedOrderInfo.dishes.map(dish => dish.total).reduce((x, y) => x + y);
+        this.currentOrder.next(updatedOrderInfo);
+      }
     });
   }
 
   private initCalendar(): void {
-    this.currentOrder.subscribe(currentOrder => {
+    this.currentOrder.pipe(distinctUntilKeyChanged("rid")).subscribe(currentOrder => {
       if (currentOrder.rid) {
         this.restaurantService.getRestaurant(currentOrder.rid).then(restaurant => {
 
@@ -98,14 +126,14 @@ export class CartComponent implements OnInit {
           };
 
           // update available time slots:
-
+          this.availableTimeSlots = this.populateAvailableTimes(restaurant.data());
         });
       }
     });
   }
 
-  private populateAvailableTimes(start: string, end: string): Array<string> {
-    return [];
+  private populateAvailableTimes(restaurant: Restaurant): Array<string> {
+    return ["2:00", "2:15"];
   }
 
   private dayWordFromNum(day: number): string {

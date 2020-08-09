@@ -4,7 +4,7 @@ import { AngularFirestore, QuerySnapshot, CollectionReference, DocumentData } fr
 
 export interface Dish {
   name: string,
-  price: string,
+  price: number,
   description: string,
   rid: string,
   id: string
@@ -23,8 +23,8 @@ export class DishService extends FirebaseService {
     return this.getCollectionSnap();
   }
 
-  getDish(id: string): Promise<DocumentData> {
-    return this.getDocInCollection(id);
+  getDish(id: string): Promise<Dish> {
+    return this.getDocInCollection(id).then(res => res.data());
   }
 
 }

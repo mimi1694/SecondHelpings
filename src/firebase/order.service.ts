@@ -81,8 +81,8 @@ export class OrderService extends FirebaseService {
 
       // look at all the dishes and tally price instead of trusting current total + new dish price
       return Promise.all(
-        Object.keys(currentOrder.dishes).map(dishId => this.dishService.getDish(dishId).then(dish => {
-          total += (currentOrder.dishes[dishId] * dish.data().price);
+        Object.keys(currentOrder.dishes).map(dishId => this.dishService.getDish(dishId).then((dish: Dish) => {
+          total += (currentOrder.dishes[dishId] * dish.price);
         })
       ))
     }).then(() => {
