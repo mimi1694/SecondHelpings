@@ -87,7 +87,7 @@ export class OrderService extends FirebaseService {
       ))
     }).then(() => {
       currentOrder.total = total;
-      return currentOrder.id ? this.edit<Order>(currentOrder.id, currentOrder) : this.put<Order>(currentOrder).then(() => {});
+      return currentOrder.id ? this.edit<Order>(currentOrder, currentOrder.id) : this.put<Order>(currentOrder).then(() => {});
     });
   }
 
@@ -98,7 +98,7 @@ export class OrderService extends FirebaseService {
     });
     return this.getActiveOrder(this.id).then(order => {
       order.active = false;
-      return this.edit<Order>(order.id, newOrder);
+      return this.edit<Order>(newOrder, order.id);
     })
   }
 
@@ -106,7 +106,7 @@ export class OrderService extends FirebaseService {
     return this.getActiveOrder(this.id).then(order => {
       const currentOrder = order;
       order.active = false;
-      return this.edit<Order>(order.id, currentOrder);
+      return this.edit<Order>(currentOrder, order.id);
     }).then(() => this.put<Order>({
       dishes: {},
       pickup: 0,

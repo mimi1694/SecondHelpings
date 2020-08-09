@@ -18,7 +18,7 @@ export class FirebaseService {
         return this.firestore.firestore.collection(this.collection).doc(doc).get();
     }
 
-    protected edit<T>(docIdentifier: string, item: T): Promise<void> {
+    protected edit<T>(item: T, docIdentifier?: string): Promise<void> {
         return this.firestore.firestore.collection(this.collection).doc(docIdentifier).set(item);
     }
 

@@ -47,7 +47,7 @@ export class AuthService {
               type: type,
               orders: []
             };
-            if (!foundUser.exists) this.userService.addUser(res.user.uid, userData).then(() => this.checkForAuthUser(res.user.uid));
+            if (!foundUser.exists) this.userService.addUser(userData, res.user.uid).then(() => this.checkForAuthUser(res.user.uid));
           });
         }
         resolve(res);

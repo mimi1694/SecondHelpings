@@ -20,8 +20,8 @@ export class UserService extends FirebaseService {
 
   onInit(): void {}
 
-  addUser(id: string, newUser: User): Promise<void> {
-    return this.edit<User>(id, newUser).catch(err => { throw err; });
+  addUser(newUser: User, id?: string): Promise<void> {
+    return this.edit<User>(newUser, id).catch(err => { throw err; });
   }
 
   getUser(userId: string): Promise<DocumentData> {
