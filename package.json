@@ -1,6 +1,9 @@
 {
   "name": "second-helpings",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
