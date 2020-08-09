@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { PaidComponent } from './paid/paid.component';
 import { RestaurantService, Restaurant } from 'src/firebase/restaurant.service';
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
 type DishData = {
   dish: Dish,
@@ -42,9 +42,9 @@ export class CartComponent implements OnInit {
   // forms for the order info
   orderDishInfo: FormArray = new FormArray([]);
   orderPickupInfo: FormGroup = new FormGroup({
-    day: new FormControl(),
-    time: new FormControl()
-  });
+    day: new FormControl({}, Validators.required),
+    time: new FormControl("", Validators.required)
+  }, Validators.required);
 
   constructor(private dishService: DishService,
               private orderService: OrderService,
@@ -58,13 +58,15 @@ export class CartComponent implements OnInit {
   }
 
   pay(): void {
-    this.orderDishInfo.reset();
-    this.orderPickupInfo.reset();
-    this.orderService.processCart().then(res => {
-      this.dialog.open(PaidComponent, {
-        width: '350px'
-      });
-    }).catch(console.error);
+    if (this.orderPickupInfo.valid) {
+      this.orderDishInfo.reset();
+      this.orderPickupInfo.reset();
+      this.orderService.processCart().then(res => {
+        this.dialog.open(PaidComponent, {
+          width: '350px'
+        });
+      }).catch(console.error);
+    }
   }
 
   private initForm(): void {
@@ -101,12 +103,14 @@ export class CartComponent implements OnInit {
     // every time the dish quantities update, update the current order
     this.orderDishInfo.valueChanges.subscribe(dishQuantities => {
       const updatedOrderInfo = this.currentOrder.getValue();
-      if (updatedOrderInfo.dishes && updatedOrderInfo.dishes.length) {
+      if (updatedOrderInfo.dishes) {
         dishQuantities.forEach((num, i) => {
-          updatedOrderInfo.dishes[i].quantity = num;
-          updatedOrderInfo.dishes[i].total = num * (updatedOrderInfo.dishes[i].dish.price);
+          if (updatedOrderInfo.dishes[i]) {
+            updatedOrderInfo.dishes[i].quantity = num;
+            updatedOrderInfo.dishes[i].total = num * (updatedOrderInfo.dishes[i].dish.price);
+          }
         });
-        updatedOrderInfo.total = updatedOrderInfo.dishes.map(dish => dish.total).reduce((x, y) => x + y);
+        updatedOrderInfo.total = (updatedOrderInfo.dishes || []).map(dish => dish.total).reduce((x, y) => x + y);
         this.currentOrder.next(updatedOrderInfo);
       }
     });

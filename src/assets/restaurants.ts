@@ -39,5 +39,25 @@ export const Restaurants = {
     "sun": false,
     "ordersPerSlot": 4,
     "slotsIncrement": 15
+  },
+  "memes-diner": {
+    "name": "Meme's Diner",
+    "address": {
+      "Pc": 40.6777,
+      "Vc": 73.9635,
+      "latitude": 40.6777,
+      "longitude": 73.9635
+    },
+    "dishes": ["/dishes/memes-pancakes", "/dishes/memes-french-toast"],
+    "start": "9:00",
+    "end": "14:00",
+    "id": "memes-diner",
+    "mon": true,
+    "tues": true,
+    "wed": true,
+    "thurs": true,
+    "fri": true,
+    "ordersPerSlot": 6,
+    "slotsIncrement": 20
   }
 }

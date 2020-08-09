@@ -33,3 +33,9 @@ a {
   margin-left: 8px;
   color: white;
 }
+
+@media (max-width: 600px) {
+  .app {
+    width: 90%;
+  }
+}
