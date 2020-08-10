@@ -26,6 +26,12 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.loggedIn = this.auth.loggedIn;
 
+    // if in dev mode, populate the test restaurants
+    if (!environment.production) {
+      this.restaurant.addRestaurant(Restaurants["prune"], "prune");
+      this.restaurant.addRestaurant(Restaurants["locanda-verde"], "locanda-verde");
+    }
+
     this.auth.authUser.subscribe(authUser => {
       this.cartLink = "/cart/" + authUser.id || "";
 
