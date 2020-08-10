@@ -9,7 +9,7 @@ import { AuthService } from 'src/firebase/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderDialogComponent } from './order-dialog/order-dialog.component';
 
-const debug = true;
+const debug = false;
 
 @Component({
   selector: 'restaurant',
