@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { UserService, User } from './user.service';
 import { BehaviorSubject } from 'rxjs';
 
-const debug = true;
+const debug = false;
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -70,7 +70,6 @@ export class AuthService {
     this.checkingForAuthUser = true;
     this.userService.getUser(id).then(user => {
       this.authUser.next(user.data());
-      console.warn("auth user: ", this.authUser);
       this.checkingForAuthUser = false;
     }).catch(err => {
       this.checkingForAuthUser = false;

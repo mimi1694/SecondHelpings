@@ -1,0 +1,1 @@
+export const FB_API_KEY = "AIzaSyC5DWZWfUADtWG79LqiOLswLN7DHVldb80";

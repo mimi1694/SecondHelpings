@@ -2,10 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/firebase/auth.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
-import { OrderService, DishCount } from 'src/firebase/order.service';
-import { RestaurantService } from 'src/firebase/restaurant.service';
-import { environment } from "src/environments/environment";
-import { Restaurants } from 'src/assets/restaurants';
+import { OrderService } from 'src/firebase/order.service';
 
 @Component({
   selector: 'app-root',
@@ -20,17 +17,10 @@ export class AppComponent implements OnInit {
 
   constructor(private auth: AuthService,
               private router: Router,
-              private order: OrderService,
-              private restaurant: RestaurantService) { }
+              private order: OrderService) { }
 
   ngOnInit(): void {
     this.loggedIn = this.auth.loggedIn;
-
-    // if in dev mode, populate the test restaurants
-    if (!environment.production) {
-      this.restaurant.addRestaurant(Restaurants["prune"], "prune");
-      this.restaurant.addRestaurant(Restaurants["locanda-verde"], "locanda-verde");
-    }
 
     this.auth.authUser.subscribe(authUser => {
       this.cartLink = "/cart/" + authUser.id || "";

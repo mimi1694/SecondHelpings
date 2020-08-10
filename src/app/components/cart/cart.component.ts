@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Order, OrderService } from 'src/firebase/order.service';
 import { Dish, DishService } from 'src/firebase/dish.service';
 import { ActivatedRoute } from '@angular/router';
