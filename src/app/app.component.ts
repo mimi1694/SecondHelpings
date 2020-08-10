@@ -3,6 +3,7 @@ import { AuthService } from 'src/firebase/auth.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { OrderService } from 'src/firebase/order.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.loggedIn = this.auth.loggedIn;
 
-    this.auth.authUser.subscribe(authUser => {
+    this.auth.authUser.pipe(filter(authUser => authUser && !!authUser.id)).subscribe(authUser => {
       this.cartLink = "/cart/" + authUser.id || "";
 
       // populate cart badge

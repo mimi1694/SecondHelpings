@@ -3,6 +3,7 @@ import { FirebaseService } from './firebase.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Dish, DishService } from './dish.service';
 import { AuthService } from './auth.service';
+import { filter } from 'rxjs/operators';
 
 export type DishCount = {
   [K in string] : number 
@@ -32,7 +33,7 @@ export class OrderService extends FirebaseService {
 
 	constructor(firestore: AngularFirestore, private authService: AuthService, private dishService: DishService) {
     super(firestore, 'orders');
-    this.authService.authUser.subscribe(authUser => this.id = authUser.id);
+    this.authService.authUser.pipe(filter(authUser => authUser && !!authUser.id)).subscribe(authUser => this.id = authUser.id);
   }
 
   onInit(): void {}
