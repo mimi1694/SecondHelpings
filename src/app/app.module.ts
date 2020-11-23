@@ -15,6 +15,7 @@ import { HomeComponent } from './components/home/home.component';
 import { MaterialModule } from './material.module';
 import { RestaurantComponent } from './components/restaurant/restaurant.component';
 import { CartComponent } from './components/cart/cart.component';
+import { OrderDialogComponent } from './components/restaurant/order-dialog/order-dialog.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CartComponent } from './components/cart/cart.component';
     LoginComponent,
     HomeComponent,
     RestaurantComponent,
-    CartComponent
+    CartComponent,
+    OrderDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -37,6 +39,7 @@ import { CartComponent } from './components/cart/cart.component';
     MaterialModule
   ],
   providers: [],
+  entryComponents: [OrderDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
