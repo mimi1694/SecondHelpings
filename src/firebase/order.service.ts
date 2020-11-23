@@ -33,11 +33,10 @@ export class OrderService extends FirebaseService {
 
 	constructor(firestore: AngularFirestore, private authService: AuthService, private dishService: DishService) {
     super(firestore, 'orders');
-  }
-  
-  onInit(): void {
     this.authService.authUser.pipe(filter(authUser => authUser && !!authUser.id)).subscribe(authUser => this.id = authUser.id);
   }
+
+  onInit(): void {}
 
   getActiveOrder(uid: string): Promise<Order | undefined> {
     return this.getActiveOrderSnap(uid).get().then(order => order.docs[0] ? order.docs[0].data() as Order : undefined);
@@ -74,7 +73,6 @@ export class OrderService extends FirebaseService {
       } else {
         if (!currentOrder.rid.length) currentOrder.rid = dish.rid;
         else if (currentOrder.rid.length && currentOrder.rid !== dish.rid) throw new OrderError("Tried to add a dish that is not from this restaurant.");
-
         if (currentOrder.dishes[dish.id]) { 
           currentOrder.dishes[dish.id]++;
         } else {

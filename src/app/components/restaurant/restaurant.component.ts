@@ -25,6 +25,7 @@ export class RestaurantComponent implements OnInit {
               private route: ActivatedRoute,
               private dishService: DishService,
               private cartService: OrderService,
+              private authService: AuthService,
               private dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -54,6 +55,7 @@ export class RestaurantComponent implements OnInit {
   addToCart(dish: Dish): void {
     // console.warn("Adding ", dish.name, dish, this.authService.authUser.id);
     this.cartService.addToOrder(dish)
+    .then(res => console.warn("finished adding", res))
     .catch(err => {
       // console.error(err);
       // TODO check error type
