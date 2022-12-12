@@ -30,7 +30,7 @@
     "@angular/router": "~10.0.8",
     "body-parser": "^1.19.0",
     "core-js": "^3.6.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "firebase": "^7.14.2",
     "firebaseui": "^4.5.0",
     "mongoose": "^5.9.10",
